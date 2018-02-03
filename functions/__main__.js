@@ -1,12 +1,18 @@
-const directions = require('../src/directions');
+const maps = require('../util/maps');
 
 /**
-* A basic Hello World function
-* @param {string} name Who you're saying hello to
-* @returns {object}
+* Function to get walking directions from two search queries
+* @param {string} from  Starting point
+* @param {string} to    Destination
+* @param {string} mode  Transportation mode
+* @returns {string}
 */
 
-module.exports = async (name = 'world', context) => {
-  let code = await directions.test(name);
-  return code;
+module.exports = async (from, to, mode='walking', context) => {
+  const modes = ['walking', 'driving', 'bicycling', 'transit'];
+  if (!modes.includes(mode)) {
+    mode = 'walking';
+  }
+  let directions = await maps.getDirections(from, to, mode);
+  return maps.toText(directions);
 };
