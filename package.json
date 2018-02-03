@@ -1,0 +1,22 @@
+{
+  "name": "hearth",
+  "version": "0.0.0",
+  "description": "",
+  "author": "shun <syrao@uwaterloo.ca>",
+  "main": "functions/__main__.js",
+  "dependencies": {
+    "@google/maps": "^0.4.5",
+    "lib": "^3.0.1"
+  },
+  "private": true,
+  "stdlib": {
+    "build": "faaslang",
+    "name": "shun/hearth",
+    "timeout": 10000,
+    "publish": true,
+    "personalize": {
+      "keys": [],
+      "user": []
+    }
+  }
+}
