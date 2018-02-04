@@ -19,9 +19,13 @@ mod.getDirections = (from, to, mode) => {
 
 mod.nClosest = (from, toArray, n) => {
   let p = new Promise((resolve) => {
+    let addresses = [];
+    for (dest of toArray) {
+      addresses.push(dest.address);
+    }
     mapsClient.distanceMatrix({
-      origins: [from],
-      destinations: toArray,
+      origins: [from.address],
+      destinations: addresses,
     }).asPromise().then((data) => {
       resolve(parseDistanceMatrix(data.json, toArray, n));
     }).catch((err) => resolve([]));
@@ -61,7 +65,7 @@ mod.toText = (obj) => {
   return text;
 }
 
-async function parseDistanceMatrix(matrix, names, n) {
+async function parseDistanceMatrix(matrix, locations, n) {
   let sorted = [];
   let elements = matrix.rows[0].elements;
   for (let i = 0; i < elements.length; i++) {
@@ -70,10 +74,9 @@ async function parseDistanceMatrix(matrix, names, n) {
   elements.sort(sortHelper);
   for (let i = 0; i < Math.min(elements.length, n); i++) {
     let index = elements[i].index;
-    let location = await lib.shun.directions.locate(names[index]);
     sorted.push({
-      name: location.name,
-      address: location.address,
+      name: locations[index].name,
+      address: locations[index].address,
       distance: elements[i].distance.text,
       duration: elements[i].duration.text
     });
