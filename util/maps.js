@@ -11,8 +11,8 @@ let mod = module.exports = {};
 
 mod.getDirections = (from, to, mode) => {
   return mapsClient.directions({
-    origin: from,
-    destination: to,
+    origin: from.address,
+    destination: to.address,
     mode: mode
   }).asPromise();
 }
@@ -54,14 +54,20 @@ mod.locate = (query, location, radius) => {
   return p;
 }
 
-mod.toText = (obj) => {
+mod.toText = (obj, to) => {
   if (obj.status != 200) return 'Error finding directions';
   let route = obj.json.routes[0].legs[0];
   let text = '';
-  for (step of route.steps) {
-    text += striptags(step.html_instructions) + ' | ' + step.distance.text + '\n';
+  for (let i = 0; i < route.steps.length; i++) {
+    let step = route.steps[i];
+    if (i < route.steps.length - 1) {
+      text += striptags(step.html_instructions);
+      text += '\n-- ' + step.distance.text +' --\n\n';
+    } else {
+      let last = '\n-- ' + step.distance.text + ' --\n\nArrive at ' + to.name;
+      text += striptags(step.html_instructions).replace('Destination will be', last);
+    }
   }
-  text += 'Arrive at ' + route.end_address;
   return text;
 }
 

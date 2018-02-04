@@ -2,17 +2,17 @@ const maps = require('../util/maps');
 
 /**
 * Function to get walking directions from two search queries
-* @param {string} from  Starting point
-* @param {string} to    Destination
 * @param {string} mode  Transportation mode
+* @param {object} from  Starting point
+* @param {object} to    Destination
 * @returns {string}
 */
 
-module.exports = async (from, to, mode='walking', context) => {
+module.exports = async (mode='walking', from, to, context) => {
   const modes = ['walking', 'driving', 'bicycling', 'transit'];
-  if (!modes.includes(mode)) {
+  if (!modes.includes(mode) || mode == null) {
     mode = 'walking';
   }
   let directions = await maps.getDirections(from, to, mode);
-  return maps.toText(directions);
+  return maps.toText(directions, to);
 };
