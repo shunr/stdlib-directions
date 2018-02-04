@@ -28,8 +28,29 @@ mod.nClosest = (from, toArray, n) => {
   return p;
 }
 
+mod.locate = (query, location, radius) => {
+  let p = new Promise((resolve) => {
+    mapsClient.places({
+      query: query,
+      location: location,
+      radius: radius
+    }).asPromise().then((data) => {
+      let out = {};
+      if (data.json.results.length > 0) {
+        let result = data.json.results[0];
+        out = {
+          name: result.name,
+          address: result.formatted_address
+        };
+      }
+      resolve(out);
+    });
+  });
+  return p;
+}
+
 mod.toText = (obj) => {
-  if (obj.status != 200) return 'Not valid';
+  if (obj.status != 200) return 'Error finding directions';
   let route = obj.json.routes[0].legs[0];
   let text = '';
   for (step of route.steps) {
