@@ -9,6 +9,7 @@ const maps = require('../util/maps');
 */
 
 module.exports = async (from, toArray, n=5, context) => {
+  if (toArray.length == 0) return [];
   let closest = await maps.nClosest(from, toArray, n);
   return closest;
 };

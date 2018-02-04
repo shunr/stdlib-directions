@@ -23,7 +23,7 @@ mod.nClosest = (from, toArray, n) => {
       destinations: toArray,
     }).asPromise().then((data) => {
       resolve(parseDistanceMatrix(data.json, toArray, n));
-    });
+    }).catch((err) => resolve([]));
   });
   return p;
 }
