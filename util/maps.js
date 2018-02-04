@@ -1,4 +1,5 @@
 const maps = require('@google/maps');
+const lib = require('lib');
 const striptags = require('striptags');
 
 const mapsClient = maps.createClient({
@@ -60,19 +61,19 @@ mod.toText = (obj) => {
   return text;
 }
 
-function parseDistanceMatrix(matrix, names, n) {
+async function parseDistanceMatrix(matrix, names, n) {
   let sorted = [];
   let elements = matrix.rows[0].elements;
-  let addresses = matrix.destination_addresses;
   for (let i = 0; i < elements.length; i++) {
     elements[i].index = i;
   }
   elements.sort(sortHelper);
   for (let i = 0; i < Math.min(elements.length, n); i++) {
     let index = elements[i].index;
+    let location = await lib.shun.directions.locate(names[index]);
     sorted.push({
-      name: names[index],
-      address: addresses[index],
+      name: location.name,
+      address: location.address,
       distance: elements[i].distance.text,
       duration: elements[i].duration.text
     });
